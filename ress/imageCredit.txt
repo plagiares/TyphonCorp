@@ -1,0 +1,19 @@
+playDefault.png made by Nice and Serious from www.flaticon.com
+playFocused.png made by Elegant Themes  from www.flaticon.com
+pauseDefault.png made by Freepik  from www.flaticon.com
+pauseFocused.png made by Freepik  from www.flaticon.com
+nextDefault.png made by Freepik  from www.flaticon.com
+previousDefault.png made by Freepik  from www.flaticon.com
+backwardFocused.png made by Elegant Themes  from www.flaticon.com
+forwardFocused.png made by Elegant Themes  from www.flaticon.com
+forwardDefault.png made by Alessio Atzeni  from www.flaticon.com
+backwardDefault.png made by Alessio Atzeni  from www.flaticon.com
+shuffleFocused.png made by Freepik  from www.flaticon.com
+shuffleDefault.png made by Freepik  from www.flaticon.com
+repeatDefault.png made by Freepik  from www.flaticon.com
+repeatFocused.png made by Freepik  from www.flaticon.com
+playlistFocused.png made by Freepik  from www.flaticon.com
+playlistDefault.png made by Freepik  from www.flaticon.com
+android.png made by Freepik  from www.flaticon.com
+android2.png made by Freepik  from www.flaticon.com
+android3.png made by Freepik  from www.flaticon.com
