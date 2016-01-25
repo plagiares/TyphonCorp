@@ -15,6 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".SongListItem"
+            android:label="Song Item Selected"></activity>
+
+        <activity android:name=".SongDisplay"
+            android:label="Song Item Selected"></activity>
     </application>
 
 </manifest>
