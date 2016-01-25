@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/shuffle_focused"
+    <item android:drawable="@drawable/shuffle_focused2"
         android:state_focused="true"
         android:state_pressed="true" />
-    <item android:drawable="@drawable/shuffle_focused"
+    <item android:drawable="@drawable/shuffle_focused2"
         android:state_focused="false"
         android:state_pressed="true" />
-    <item android:drawable="@drawable/shuffle_focused"
+    <item android:drawable="@drawable/shuffle_focused2"
         android:state_focused="true" />
-    <item android:drawable="@drawable/shuffle_default"
+    <item android:drawable="@drawable/shuffle_default2"
         android:state_focused="false"
         android:state_pressed="false" />
 </selector>
