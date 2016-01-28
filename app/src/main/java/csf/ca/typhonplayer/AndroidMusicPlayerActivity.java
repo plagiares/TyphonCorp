@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import csf.ca.utilities.Utilities;
 
@@ -189,6 +190,52 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             }
          });
 
+        btnRepeat.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View arg0)
+            {
+                if(onRepeatMode)
+                {
+                    onRepeatMode = false;
+
+                    btnRepeat.setImageResource(R.drawable.btn_repeat);
+                }
+                else
+                {
+                    onRepeatMode = true;
+                    onShuffleMode = false;
+
+                    btnRepeat.setImageResource(R.drawable.repeat_focused2);
+                    btnShuffle.setImageResource(R.drawable.shuffle_focused2);
+                }
+            }
+
+        });
+
+        btnShuffle.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(onShuffleMode)
+                {
+                    onShuffleMode = false;
+
+                    btnShuffle.setImageResource(R.drawable.btn_shuffle);
+                }
+                else
+                {
+                    onShuffleMode = true;
+                    onRepeatMode = false;
+
+                    btnShuffle.setImageResource(R.drawable.shuffle_focused2);
+                    btnRepeat.setImageResource(R.drawable.btn_repeat);
+                }
+
+            }
+        });
+
     }
 
     private void playSong(int currentSongIndex)
@@ -203,6 +250,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             mediaPlayer.start();
 
             String songTitle = songsList.get(currentSongIndex).get(SONG_TITLE_KEY);
+
             lblSongTitle.setText(songTitle);
 
             btnPlay.setImageResource(R.drawable.btn_pause);
@@ -271,7 +319,27 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
     @Override
     public void onCompletion(MediaPlayer mp)
     {
+        if (onShuffleMode)
+        {
+            Random r = new Random();
+            currentSongIndex = r.nextInt(songsList.size() - 1);
+        }
+        else
+        {
+            if(!onRepeatMode)
+            {
+                if(currentSongIndex < (songsList.size() - 1))
+                {
+                    currentSongIndex++;
+                }
+                else
+                {
+                    currentSongIndex = DEFAULT_SONG_INDEX;
+                }
+            }
+        }
 
+        playSong(currentSongIndex);
     }
 
 }
