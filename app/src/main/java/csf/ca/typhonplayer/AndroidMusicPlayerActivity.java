@@ -104,6 +104,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           songSeekBar.setOnSeekBarChangeListener(this);
           mediaPlayer.setOnCompletionListener(this);
 
+          //TODO
           //songsList = songsManager.getPlayList();
     }
 
