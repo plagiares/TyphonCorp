@@ -10,9 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7e4ec67-016f-42eb-9254-94bf14ac18c6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/AndroidMusicPlayerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/AndroidMusicPlayerActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
     </list>
     <ignored path="TyphonPlayer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,12 +63,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="18" column="39" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
-              <folding />
+            <state vertical-scroll-proportion="0.5342857">
+              <caret line="11" column="50" selection-start-line="11" selection-start-column="50" selection-end-line="11" selection-end-column="50" />
+              <folding>
+                <element signature="e#449#467#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -148,10 +148,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AndroidMusicPlayerActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AndroidMusicPlayerActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/AndroidMusicPlayerActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.5057143">
+            <state vertical-scroll-proportion="0.0">
               <caret line="320" column="5" selection-start-line="320" selection-start-column="5" selection-end-line="320" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -1734,12 +1734,12 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/player.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/song_list_item_view.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/SongListItem.java" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/SongDisplay.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/SongsManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csf/ca/utilities/Utilities.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/AndroidMusicPlayer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/AndroidMusicPlayerActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       </list>
     </option>
   </component>
@@ -2522,14 +2522,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="39" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/song_list_item_view.xml">
       <provider editor-type-id="android-designer">
         <state />
@@ -2614,7 +2606,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/csf/ca/typhonplayer/AndroidMusicPlayerActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5057143">
+        <state vertical-scroll-proportion="0.0">
           <caret line="320" column="5" selection-start-line="320" selection-start-column="5" selection-end-line="320" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -2624,6 +2616,16 @@
             <element signature="e#6895#6896#0" expanded="true" />
             <element signature="e#6938#7553#0" expanded="true" />
             <element signature="e#7552#7553#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5342857">
+          <caret line="11" column="50" selection-start-line="11" selection-start-column="50" selection-end-line="11" selection-end-column="50" />
+          <folding>
+            <element signature="e#449#467#0" expanded="true" />
           </folding>
         </state>
       </provider>
