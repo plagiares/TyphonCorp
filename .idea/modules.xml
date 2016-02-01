@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TyphonPlayer.iml" filepath="$PROJECT_DIR$/TyphonPlayer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TyphonPlayer.iml" filepath="$PROJECT_DIR$/TyphonPlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TyphonCorp.iml" filepath="$PROJECT_DIR$/TyphonCorp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

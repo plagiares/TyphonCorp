@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New XML document created with EditiX XML Editor (http://www.editix.com) at Thu Jan 21 08:30:30 EST 2016 -->
+
+<!DOCTYPE library [
+  <!ELEMENT library (tracks, playlists)>
+  <!ELEMENT tracks (track*)>
+  <!ELEMENT track (name, artist, album, path, genre, year)>
+  <!ATTLIST track id ID #REQUIRED>
+  <!ELEMENT name (#PCDATA)>
+  <!ELEMENT artist (#PCDATA)>
+  <!ELEMENT album (#PCDATA)>
+  <!ELEMENT path (#PCDATA)>
+  <!ELEMENT genre (#PCDATA)>
+  <!ELEMENT year (#PCDATA)>
+  <!ELEMENT playlists (playlist*)>
+  <!ELEMENT playlist (name, trackInPlaylist*)>
+  <!ATTLIST playlist
+    id ID #REQUIRED 
+    current (true|false) #REQUIRED>
+  <!ELEMENT trackInPlaylist (#PCDATA)>
+  <!ATTLIST trackInPlaylist referencedTrack IDREF #REQUIRED>
+]>
+
+<library>
+	<tracks>
+		<track id = "track_id_001">
+			<name>Hannya</name>
+			<artist>Kaya</artist>
+			<album>Hyakki Yagyou</album>
+			<path>C:\dev\Hannya.mp3</path>
+			<genre>Visual Kei</genre>
+			<year>2005</year>
+		</track>
+		<track id = "track_id_002">
+			<name>palm</name>
+			<artist>Kalm</artist>
+			<album>Palm/Choose</album>
+			<path>C:\dev\palm.mp3</path>
+			<genre>Visual Kei</genre>
+			<year>2013</year>
+		</track>
+	</tracks>
+	<playlists>
+		<playlist id = "playlist_id_001" current="false">
+			<name>Fun times</name>
+			<trackInPlaylist referencedTrack = "track_id_001" />
+			<trackInPlaylist referencedTrack = "track_id_002" />
+		</playlist>
+	</playlists>
+</library>
