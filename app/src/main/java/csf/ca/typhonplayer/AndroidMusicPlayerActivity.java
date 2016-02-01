@@ -2,10 +2,13 @@ package csf.ca.typhonplayer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -23,6 +26,9 @@ import csf.ca.utilities.Utilities;
 public class AndroidMusicPlayerActivity extends Activity
 implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 {
+    private static final String[] STAR = {"*"};
+    private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
+
      private static final int DEFAULT_FORWARD_TIME = 5000;
      private static final int DEFAULT_BACKWARD_TIME = 5000;
      private static final int INITIAL_SONG_TIME = 0;
@@ -106,8 +112,37 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           songSeekBar.setOnSeekBarChangeListener(this);
           mediaPlayer.setOnCompletionListener(this);
 
+        Cursor c;
+        Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
 
-        songList = songsManager.getInternalDriveAudio();
+        c = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
+
+        if(c != null)
+        {
+            if(c.moveToFirst())
+            {
+                do
+                {
+                    String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                    String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                    String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+
+                    Song newSong = new Song(songName, songPath);
+
+                    newSong.album = songAlbum;
+                    newSong.artist = songArtiste;
+
+                    songList.add(newSong);
+                }
+                while(c.moveToNext());
+
+
+            }
+        }
+
+        //songList = songsManager.getInternalDriveAudio();
     }
 
     public void initControlListener()

@@ -54,7 +54,7 @@ public class SongsManager extends Activity {
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
 
-        c = managedQuery(externalContentPath, STAR, selectMusicCriteria, null, null);
+        c = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
 
         if(c != null)
         {
