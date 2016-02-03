@@ -1,10 +1,14 @@
 package csf.ca.typhonplayer;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -12,7 +16,6 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import csf.ca.utilities.Utilities;
@@ -23,9 +26,14 @@ import csf.ca.utilities.Utilities;
 public class AndroidMusicPlayerActivity extends Activity
 implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 {
+    private static final String[] STAR = {"*"};
+    private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
+
      private static final int DEFAULT_FORWARD_TIME = 5000;
      private static final int DEFAULT_BACKWARD_TIME = 5000;
      private static final int INITIAL_SONG_TIME = 0;
+
+     private static final int RETURN_CODE_PARAM = 100;
 
      private static final int DEFAULT_SONG_INDEX = 0;
      private static final int INDEX_DIFFERENCE = 1;
@@ -67,7 +75,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
      private boolean onShuffleMode = false;
      private boolean onRepeatMode = false;
 
-     private ArrayList<HashMap<String,String>> songsList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<Song> songList = new ArrayList<Song>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,8 +112,37 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           songSeekBar.setOnSeekBarChangeListener(this);
           mediaPlayer.setOnCompletionListener(this);
 
-          //TODO
-          //songsList = songsManager.getPlayList();
+        Cursor c;
+        Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
+
+        c = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
+
+        if(c != null)
+        {
+            if(c.moveToFirst())
+            {
+                do
+                {
+                    String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                    String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                    String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+
+                    Song newSong = new Song(songName, songPath);
+
+                    newSong.album = songAlbum;
+                    newSong.artist = songArtiste;
+
+                    songList.add(newSong);
+                }
+                while(c.moveToNext());
+
+
+            }
+        }
+
+        //songList = songsManager.getInternalDriveAudio();
     }
 
     public void initControlListener()
@@ -113,9 +150,9 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           btnPlayList.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View arg0) {
-                  /*TODO
-                  Intent intent = new Intent(getApplicationContext(), );
-                  startActivity(intent, 100);*/
+
+                  Intent intent = new Intent(getApplicationContext(), LibraryDisplay.class);
+                  startActivityForResult(intent, RETURN_CODE_PARAM);
               }
           });
 
@@ -124,7 +161,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
               @Override
               public void onClick(View arg0)
               {
-                  if(currentSongIndex < (songsList.size() - INDEX_DIFFERENCE))
+                  if(currentSongIndex < (songList.size() - INDEX_DIFFERENCE))
                   {
                       currentSongIndex = currentSongIndex + INDEX_DIFFERENCE;
                   }
@@ -245,12 +282,12 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         {
             mediaPlayer.reset();
 
-            mediaPlayer.setDataSource(songsList.get(currentSongIndex).get(SONG_PATH_KEY));
+            mediaPlayer.setDataSource(songList.get(currentSongIndex).path);
 
             mediaPlayer.prepare();
             mediaPlayer.start();
 
-            String songTitle = songsList.get(currentSongIndex).get(SONG_TITLE_KEY);
+            String songTitle = songList.get(currentSongIndex).name;
 
             lblSongTitle.setText(songTitle);
 
@@ -323,13 +360,13 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         if (onShuffleMode)
         {
             Random r = new Random();
-            currentSongIndex = r.nextInt(songsList.size() - 1);
+            currentSongIndex = r.nextInt(songList.size() - 1);
         }
         else
         {
             if(!onRepeatMode)
             {
-                if(currentSongIndex < (songsList.size() - 1))
+                if(currentSongIndex < (songList.size() - 1))
                 {
                     currentSongIndex++;
                 }
