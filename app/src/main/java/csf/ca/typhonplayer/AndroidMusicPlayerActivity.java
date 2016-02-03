@@ -1,8 +1,10 @@
 package csf.ca.typhonplayer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -56,12 +58,14 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
      private ImageButton btnShuffle;
 
      private SeekBar songSeekBar;
+     private SeekBar volumeSeekBar;
 
      private TextView lblSongTitle;
      private TextView lblSongProgression;
      private TextView lblSongTotalDuration;
 
      private MediaPlayer mediaPlayer;
+     private AudioManager audioManager;
 
      private Handler handler = new Handler();
 
@@ -81,6 +85,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         initView();
         initControlListener();
@@ -98,18 +103,21 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
 
           songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
+          volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
           lblSongProgression = (TextView) findViewById(R.id.songCurrentDurationLabel);
           lblSongTotalDuration = (TextView) findViewById(R.id.songTotalDurationLabel);
 
           mediaPlayer = new MediaPlayer();
+          audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
           songsManager = new SongsManager();
 
           utilities = new Utilities();
 
           songSeekBar.setOnSeekBarChangeListener(this);
+
           mediaPlayer.setOnCompletionListener(this);
 
         Cursor c;
@@ -274,6 +282,29 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             }
         });
 
+        volumeSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        volumeSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
+        volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+                //NOT_REQUIRED
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+                //NOT_REQUIRED
+            }
+        });
     }
 
     private void playSong(int currentSongIndex)
