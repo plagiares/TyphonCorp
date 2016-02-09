@@ -18,6 +18,11 @@ public class LibraryDisplay extends ListActivity {
     // Songs list
     private ArrayList<Song> songsList = new ArrayList<Song>();
     private ArrayList<String> titles = new ArrayList<String>();
+
+    private static final String[] STAR = {"*"};
+    private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
+
+    private ArrayList<Song> songList = new ArrayList<Song>();
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -28,21 +33,6 @@ public class LibraryDisplay extends ListActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.song_list_item_view);
-
-
-        //SongsManager plm = new SongsManager();
-        // get all songs from sdcard
-            // this.songsList = plm.getSongList();
-        /*
-        // looping through playlist
-        for (int i = 0; i < songsList.size(); i++) {
-            // creating new HashMap
-            //HashMap<String, String> song = songsList.get(i).name songsList.get(i).path;
-
-            // adding HashList to ArrayList
-            //songsListData.add(song);
-        }
-        */
 
         Song song = new Song("name", "abc");
         song.name = "name";
@@ -86,42 +76,38 @@ public class LibraryDisplay extends ListActivity {
         */
     }
 
-    void getSongs ()
+    public void initSongList()
     {
-        ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-        String[] STAR = { "*" };
+        Cursor c;
+        Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
 
-        Cursor cursor;
-        Context context;
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        c = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
 
-        cursor =  getContentResolver().query(uri, STAR, selection, null, null);
+        if(c != null)
+        {
+            if(c.moveToFirst())
+            {
+                do
+                {
+                    String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    String songName = cursor
-                            .getString(cursor
-                                    .getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    if (type.equals("audio/mpeg")) {
 
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                        String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
 
-                    String path = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Audio.Media.DATA));
+                        Song newSong = new Song(songName, songPath);
 
+                        newSong.album = songAlbum;
+                        newSong.artist = songArtiste;
+                        songList.add(newSong);
+                    }
 
-                    String albumName = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    int albumId = cursor
-                            .getInt(cursor
-                                    .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-
-                    HashMap<String, String> song = new HashMap<String, String>();
-                    song.put("songTitle",albumName+" "+songName+"___"+albumId);
-                    song.put("songPath",path );
-                    songsList.add(song);
-
-                } while (cursor.moveToNext());
+                }
+                while(c.moveToNext());
 
 
             }

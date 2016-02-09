@@ -112,6 +112,11 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           songSeekBar.setOnSeekBarChangeListener(this);
           mediaPlayer.setOnCompletionListener(this);
 
+        initSongList();
+    }
+
+    public void initSongList()
+    {
         Cursor c;
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
@@ -124,25 +129,29 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             {
                 do
                 {
-                    String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-                    Song newSong = new Song(songName, songPath);
+                    if (type.equals("audio/mpeg")) {
 
-                    newSong.album = songAlbum;
-                    newSong.artist = songArtiste;
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                        String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
 
-                    songList.add(newSong);
+                        Song newSong = new Song(songName, songPath);
+
+                        newSong.album = songAlbum;
+                        newSong.artist = songArtiste;
+                        songList.add(newSong);
+                    }
+
                 }
                 while(c.moveToNext());
 
 
             }
-        }
 
-        //songList = songsManager.getInternalDriveAudio();
+        }
     }
 
     public void initControlListener()
