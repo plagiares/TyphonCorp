@@ -1,7 +1,7 @@
 package csf.ca.typhonplayer;
 
+import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Alexis on 2016-01-25.
@@ -32,7 +31,7 @@ public class LibraryDisplay extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.song_list_item_view);
+        setContentView(R.layout.library_view);
 
         Song song = new Song("name", "abc");
         song.name = "name";

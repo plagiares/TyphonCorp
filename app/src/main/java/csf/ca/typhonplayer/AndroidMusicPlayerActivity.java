@@ -131,24 +131,22 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
                 {
                     String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-                    if (type.equals("audio/mpeg")) {
-
+                    if (type.equals("audio/mpeg"))
+                    {
                         String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                        String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                         String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                         String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
 
                         Song newSong = new Song(songName, songPath);
 
                         newSong.album = songAlbum;
-                        newSong.artist = songArtiste;
+                        newSong.artist = songArtist;
                         songList.add(newSong);
                     }
 
                 }
                 while(c.moveToNext());
-
-
             }
 
         }
@@ -161,7 +159,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
               public void onClick(View arg0) {
 
                   Intent intent = new Intent(getApplicationContext(), LibraryDisplay.class);
-                  startActivityForResult(intent, RETURN_CODE_PARAM);
+                  startActivity(intent);
               }
           });
 
