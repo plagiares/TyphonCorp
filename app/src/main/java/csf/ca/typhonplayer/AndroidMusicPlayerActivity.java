@@ -284,18 +284,29 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
     }
 
-    private void playSong(int currentSongIndex)
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 100){
+            currentSongIndex = data.getExtras().getInt("songIndex");
+            // play selected song
+            playSong(currentSongIndex);
+        }
+    }
+
+    public void playSong(int songIndex)
     {
         try
         {
             mediaPlayer.reset();
 
-            mediaPlayer.setDataSource(songList.get(currentSongIndex).path);
+            mediaPlayer.setDataSource(songList.get(songIndex).path);
 
             mediaPlayer.prepare();
             mediaPlayer.start();
 
-            String songTitle = songList.get(currentSongIndex).name;
+            String songTitle = songList.get(songIndex).name;
 
             lblSongTitle.setText(songTitle);
 
