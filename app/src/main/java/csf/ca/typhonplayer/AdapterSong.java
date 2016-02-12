@@ -22,7 +22,7 @@ public class AdapterSong extends ArrayAdapter<Song> {
         super(activity, textViewResourceId);
         try {
             this.activity = activity;
-            this.lSongs = lSongs;
+            this.lSongs = _lSongs;
 
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -56,9 +56,8 @@ public class AdapterSong extends ArrayAdapter<Song> {
                 vi = inflater.inflate(R.layout.list_item, null);
                 holder = new ViewHolder();
 
-                holder.display_title = (TextView) vi.findViewById(R.id.songTitle);
+                holder.display_title = (TextView) vi.findViewById(R.id.songName);
                 holder.display_artist = (TextView) vi.findViewById(R.id.songArtist);
-
 
                 vi.setTag(holder);
             } else {
@@ -66,7 +65,7 @@ public class AdapterSong extends ArrayAdapter<Song> {
             }
 
             holder.display_title.setText(lSongs.get(position).name);
-            holder.display_artist.setText(lSongs.get(position).album);
+            holder.display_artist.setText(lSongs.get(position).artist);
 
         } catch (Exception e) {
 

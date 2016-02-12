@@ -4,4 +4,36 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@android:color/white">
+    <LinearLayout
+        android:id="@+id/player_header_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="@android:color/holo_blue_light"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:id="@+id/LibraryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:paddingLeft="10dp"
+            android:textStyle="bold"
+            android:text="Music Library"
+            android:layout_marginTop="10dp"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_songs"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="#242424"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
+
 </LinearLayout>

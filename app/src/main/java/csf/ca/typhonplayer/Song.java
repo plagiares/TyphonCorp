@@ -13,7 +13,7 @@ public class Song
 
     Song(String _name, String _path)
     {
-        _name = name;
-        _path = path;
+        name = _name;
+        path = _path;
     }
 }

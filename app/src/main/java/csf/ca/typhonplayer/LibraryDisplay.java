@@ -3,12 +3,15 @@ package csf.ca.typhonplayer;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,7 +29,6 @@ import csf.ca.utilities.Utilities;
 public class LibraryDisplay extends Activity {
     // Songs list
     private ArrayList<Song> songsList = new ArrayList<Song>();
-    private ArrayList<String> titles = new ArrayList<String>();
 
     private static final String[] STAR = {"*"};
     private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
@@ -48,6 +50,7 @@ public class LibraryDisplay extends Activity {
         setContentView(R.layout.library_view);
 
         initView();
+        initSongList();
 
         listView = (ListView) findViewById(R.id.list_songs);
 
@@ -55,11 +58,8 @@ public class LibraryDisplay extends Activity {
         adbSong = new AdapterSong (LibraryDisplay.this, 0, songList);
         listView.setAdapter(adbSong);
 
-        /*
-        // selecting single ListView item
-        ListView lv = getListView();
         // listening to single listitem click
-        lv.setOnItemClickListener(new OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -69,7 +69,7 @@ public class LibraryDisplay extends Activity {
 
                 // Starting new intent
                 Intent in = new Intent(getApplicationContext(),
-                        AndroidBuildingMusicPlayerActivity.class);
+                        AndroidMusicPlayerActivity.class);
                 // Sending songIndex to PlayerActivity
                 in.putExtra("songIndex", songIndex);
                 setResult(100, in);
@@ -77,26 +77,17 @@ public class LibraryDisplay extends Activity {
                 finish();
             }
         });
-        */
+
     }
 
 
 
     public void initView()
     {
-        ImageButton btnPlay = (ImageButton) findViewById(R.id.btnPlay);
-        ImageButton btnNext = (ImageButton) findViewById(R.id.btnNext);
-        ImageButton btnBackward = (ImageButton) findViewById(R.id.btnBackward);
-        ImageButton btnForward = (ImageButton) findViewById(R.id.btnForward);
-        ImageButton btnPrevious = (ImageButton) findViewById(R.id.btnPrevious);
-        ImageButton btnPlayList = (ImageButton) findViewById(R.id.btnPlaylist);
-        ImageButton btnRepeat = (ImageButton) findViewById(R.id.btnRepeat);
-        ImageButton btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
-
 
     }
 
-   /* public void initSongList()
+    public void initSongList()
     {
         Cursor c;
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -114,7 +105,7 @@ public class LibraryDisplay extends Activity {
 
                     if (type.equals("audio/mpeg")) {
 
-                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.TITLE));
                         String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                         String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                         String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -134,7 +125,4 @@ public class LibraryDisplay extends Activity {
 
         }
     }
-
-
-*/
 }
