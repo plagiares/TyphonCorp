@@ -111,8 +111,6 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
           songSeekBar.setOnSeekBarChangeListener(this);
           mediaPlayer.setOnCompletionListener(this);
-
-        initSongList();
     }
 
     public void initSongList()
@@ -158,8 +156,11 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
               @Override
               public void onClick(View arg0) {
 
+/*                  Intent intent = new Intent(getApplicationContext(), LibraryDisplay.class);
+                  startActivity(intent);*/
+
                   Intent intent = new Intent(getApplicationContext(), LibraryDisplay.class);
-                  startActivity(intent);
+                  startActivityForResult(intent, RETURN_CODE_PARAM);
               }
           });
 

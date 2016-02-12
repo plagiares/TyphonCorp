@@ -2,18 +2,28 @@ package csf.ca.typhonplayer;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import csf.ca.utilities.Utilities;
 
 /**
  * Created by Alexis on 2016-01-25.
  */
-public class LibraryDisplay extends ListActivity {
+public class LibraryDisplay extends Activity {
     // Songs list
     private ArrayList<Song> songsList = new ArrayList<Song>();
     private ArrayList<String> titles = new ArrayList<String>();
@@ -22,34 +32,29 @@ public class LibraryDisplay extends ListActivity {
     private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
 
     private ArrayList<Song> songList = new ArrayList<Song>();
+
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
+        ListView listView ;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_view);
 
-        Song song = new Song("name", "abc");
-        song.name = "name";
-        song.album = "album";
-        song.artist = "artist";
+        initView();
 
-        Song song2 = new Song("name2", "abc2");
-        song.name = "name2";
-        song.album = "album2";
-        song.artist = "artist2";
+        listView = (ListView) findViewById(R.id.list_songs);
 
-        songsList.add(song);
-        songsList.add(song2);
+        AdapterSong adbSong;
+        adbSong = new AdapterSong (LibraryDisplay.this, 0, songList);
+        listView.setAdapter(adbSong);
 
-        // Adding menuItems to ListView
-        ArrayAdapter<Song> adapter = new ArrayAdapter<Song>(this,
-                R.layout.list_item, songsList);
-        setListAdapter(adapter);
         /*
         // selecting single ListView item
         ListView lv = getListView();
@@ -75,7 +80,23 @@ public class LibraryDisplay extends ListActivity {
         */
     }
 
-    public void initSongList()
+
+
+    public void initView()
+    {
+        ImageButton btnPlay = (ImageButton) findViewById(R.id.btnPlay);
+        ImageButton btnNext = (ImageButton) findViewById(R.id.btnNext);
+        ImageButton btnBackward = (ImageButton) findViewById(R.id.btnBackward);
+        ImageButton btnForward = (ImageButton) findViewById(R.id.btnForward);
+        ImageButton btnPrevious = (ImageButton) findViewById(R.id.btnPrevious);
+        ImageButton btnPlayList = (ImageButton) findViewById(R.id.btnPlaylist);
+        ImageButton btnRepeat = (ImageButton) findViewById(R.id.btnRepeat);
+        ImageButton btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
+
+
+    }
+
+   /* public void initSongList()
     {
         Cursor c;
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -115,5 +136,5 @@ public class LibraryDisplay extends ListActivity {
     }
 
 
-
+*/
 }
