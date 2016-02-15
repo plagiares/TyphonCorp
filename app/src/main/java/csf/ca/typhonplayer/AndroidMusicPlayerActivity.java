@@ -46,9 +46,6 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
      private static final int THREAD_POST_DELAYED_TIME = 100;
 
-     private static String SONG_PATH_KEY = "songPath";
-     private static String SONG_TITLE_KEY = "songTitle";
-
      private ImageButton btnPlay;
      private ImageButton btnNext;
      private ImageButton btnForward;
@@ -104,9 +101,9 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           btnRepeat = (ImageButton) findViewById(R.id.btnRepeat);
           btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
           
-        albumArtThumbnail = (ImageView) findViewById(R.id.albumArt);
+          albumArtThumbnail = (ImageView) findViewById(R.id.albumArt);
            
-            songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
+          songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
           volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
@@ -125,32 +122,32 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
     public void initSongList()
     {
-        Cursor c;
+        Cursor cursor;
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
 
-        c = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
+        cursor = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
 
-        if(c != null)
+        if(cursor != null)
         {
-            if(c.moveToFirst())
+            if(cursor.moveToFirst())
             {
                 do
                 {
-                    String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
+                    String type = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
                     if (type.equals("audio/mpeg"))
                     {
-                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                        String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                        String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                        String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        String songName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songAlbum = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                        String songPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                         String albumArtPath= "";
                         try {
-                            albumArtPath = c.getString(c.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                            albumArtPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
                         }
                         catch (Exception e) {
-
+                            e.printStackTrace();
                         }
 
                         Song newSong = new Song(songName, songPath);
@@ -158,11 +155,12 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
                         newSong.album = songAlbum;
                         newSong.artist = songArtist;
                         newSong.albumArtPath = albumArtPath;
+
                         songList.add(newSong);
                     }
 
                 }
-                while(c.moveToNext());
+                while(cursor.moveToNext());
             }
         }
     }
@@ -408,7 +406,9 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             long totalDuration = mediaPlayer.getDuration();
             long currentDuration = mediaPlayer.getCurrentPosition();
 
-            lblSongTotalDuration.setText(utilities.timerFormat(totalDuration - currentDuration));
+            long songDurationLeft = (totalDuration - currentDuration);
+
+            lblSongTotalDuration.setText(utilities.timerFormat(songDurationLeft));
             lblSongProgression.setText(utilities.timerFormat(currentDuration));
 
             int progressPercentage = utilities.getCurrentProgressPercentage(currentDuration, totalDuration);
