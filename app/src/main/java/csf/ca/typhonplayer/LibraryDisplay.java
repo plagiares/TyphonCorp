@@ -28,13 +28,10 @@ import csf.ca.utilities.Utilities;
  */
 public class LibraryDisplay extends Activity {
     // Songs list
-    private ArrayList<Song> songsList = new ArrayList<Song>();
 
     private static final String[] STAR = {"*"};
     private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
-
     private ArrayList<Song> songList = new ArrayList<Song>();
-
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -49,8 +46,8 @@ public class LibraryDisplay extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_view);
 
-        initView();
         initSongList();
+        initView();
 
         listView = (ListView) findViewById(R.id.list_songs);
 
@@ -87,6 +84,7 @@ public class LibraryDisplay extends Activity {
 
     }
 
+
     public void initSongList()
     {
         Cursor c;
@@ -103,24 +101,30 @@ public class LibraryDisplay extends Activity {
                 {
                     String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-                    if (type.equals("audio/mpeg")) {
-
-                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                        String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                    if (type.equals("audio/mpeg"))
+                    {
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                         String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                         String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        String albumArtPath = null;
+                        try {
+                            albumArtPath = c.getString(c.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                        }
+                        catch (Exception e) {
+
+                        }
 
                         Song newSong = new Song(songName, songPath);
 
                         newSong.album = songAlbum;
-                        newSong.artist = songArtiste;
+                        newSong.artist = songArtist;
+                        newSong.albumArtPath = albumArtPath;
                         songList.add(newSong);
                     }
 
                 }
                 while(c.moveToNext());
-
-
             }
 
         }

@@ -3,6 +3,7 @@ package csf.ca.typhonplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -11,8 +12,11 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +59,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
      private ImageButton btnRepeat;
      private ImageButton btnShuffle;
 
+     private ImageView albumArtThumbnail;
      private SeekBar songSeekBar;
 
      private TextView lblSongTitle;
@@ -65,15 +70,14 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
      private Handler handler = new Handler();
 
-     private SongsManager songsManager;
      private Utilities utilities;
 
      private int seekForwardTime = DEFAULT_FORWARD_TIME;
      private int seekBackwardTime = DEFAULT_BACKWARD_TIME;
-     private int currentSongIndex = DEFAULT_SONG_INDEX;
+    private int currentSongIndex = DEFAULT_SONG_INDEX;
 
-     private boolean onShuffleMode = false;
-     private boolean onRepeatMode = false;
+    private boolean onShuffleMode = false;
+    private boolean onRepeatMode = false;
 
     private ArrayList<Song> songList = new ArrayList<Song>();
 
@@ -82,6 +86,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player);
 
+        initSongList();
         initView();
         initControlListener();
     }
@@ -96,7 +101,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           btnPlayList = (ImageButton) findViewById(R.id.btnPlaylist);
           btnRepeat = (ImageButton) findViewById(R.id.btnRepeat);
           btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
-
+          albumArtThumbnail = (ImageView) findViewById(R.id.albumArt);
           songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
@@ -104,8 +109,6 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           lblSongTotalDuration = (TextView) findViewById(R.id.songTotalDurationLabel);
 
           mediaPlayer = new MediaPlayer();
-
-          songsManager = new SongsManager();
 
           utilities = new Utilities();
 
@@ -135,11 +138,19 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
                         String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                         String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                         String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        String albumArtPath= "";
+                        try {
+                            albumArtPath = c.getString(c.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                        }
+                        catch (Exception e) {
+
+                        }
 
                         Song newSong = new Song(songName, songPath);
 
                         newSong.album = songAlbum;
                         newSong.artist = songArtist;
+                        newSong.albumArtPath = albumArtPath;
                         songList.add(newSong);
                     }
 
@@ -150,14 +161,36 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         }
     }
 
+
     public void initControlListener()
     {
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // check for already playing
+                if(mediaPlayer.isPlaying()){
+                    if(mediaPlayer!=null){
+                        mediaPlayer.pause();
+                        // Changing button image to play button
+                        btnPlay.setImageResource(R.drawable.btn_play);
+                    }
+                }else{
+                    // Resume song
+                    if(mediaPlayer!=null){
+                        mediaPlayer.start();
+                        // Changing button image to pause button
+                        btnPlay.setImageResource(R.drawable.btn_pause);
+                    }
+                }
+
+            }
+        });
+
+
           btnPlayList.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View arg0) {
-
-/*                  Intent intent = new Intent(getApplicationContext(), LibraryDisplay.class);
-                  startActivity(intent);*/
 
                   Intent intent = new Intent(getApplicationContext(), LibraryDisplay.class);
                   startActivityForResult(intent, RETURN_CODE_PARAM);
@@ -310,7 +343,16 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
             lblSongTitle.setText(songTitle);
 
+            Drawable img = Drawable.createFromPath(songList.get(songIndex).albumArtPath);
+
             btnPlay.setImageResource(R.drawable.btn_pause);
+
+            Picasso.with(this)
+                    .load(songList.get(songIndex).albumArtPath)
+                    .error(R.drawable.android3)      // optional
+                    //.resize(250, 200)                        // optional
+                    .into(albumArtThumbnail);
+
 
             songSeekBar.setProgress(DEFAULT_PERCENTAGE_SONG_COMPLETION);
             songSeekBar.setMax(FINAL_PERCENTAGE_SONG_COMPLETION);
