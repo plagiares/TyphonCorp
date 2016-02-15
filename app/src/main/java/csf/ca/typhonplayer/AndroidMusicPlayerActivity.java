@@ -1,9 +1,11 @@
 package csf.ca.typhonplayer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -61,12 +63,14 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
      private ImageView albumArtThumbnail;
      private SeekBar songSeekBar;
+     private SeekBar volumeSeekBar;
 
      private TextView lblSongTitle;
      private TextView lblSongProgression;
      private TextView lblSongTotalDuration;
 
      private MediaPlayer mediaPlayer;
+     private AudioManager audioManager;
 
      private Handler handler = new Handler();
 
@@ -74,17 +78,18 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
      private int seekForwardTime = DEFAULT_FORWARD_TIME;
      private int seekBackwardTime = DEFAULT_BACKWARD_TIME;
-    private int currentSongIndex = DEFAULT_SONG_INDEX;
+     private int currentSongIndex = DEFAULT_SONG_INDEX;
 
-    private boolean onShuffleMode = false;
-    private boolean onRepeatMode = false;
-
+     private boolean onShuffleMode = false;
+     private boolean onRepeatMode = false;
+     
     private ArrayList<Song> songList = new ArrayList<Song>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         initSongList();
         initView();
@@ -101,18 +106,23 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           btnPlayList = (ImageButton) findViewById(R.id.btnPlaylist);
           btnRepeat = (ImageButton) findViewById(R.id.btnRepeat);
           btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
-          albumArtThumbnail = (ImageView) findViewById(R.id.albumArt);
-          songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
+          
+        albumArtThumbnail = (ImageView) findViewById(R.id.albumArt);
+           
+            songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
+          volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
           lblSongProgression = (TextView) findViewById(R.id.songCurrentDurationLabel);
           lblSongTotalDuration = (TextView) findViewById(R.id.songTotalDurationLabel);
 
           mediaPlayer = new MediaPlayer();
+          audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
           utilities = new Utilities();
 
           songSeekBar.setOnSeekBarChangeListener(this);
+
           mediaPlayer.setOnCompletionListener(this);
     }
 
@@ -157,11 +167,9 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
                 }
                 while(c.moveToNext());
             }
-
         }
     }
-
-
+    
     public void initControlListener()
     {
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -315,6 +323,29 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             }
         });
 
+        volumeSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        volumeSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
+        volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+                //NOT_REQUIRED
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+                //NOT_REQUIRED
+            }
+        });
     }
 
     @Override
