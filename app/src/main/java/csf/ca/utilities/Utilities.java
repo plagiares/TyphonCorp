@@ -9,7 +9,7 @@ public class Utilities
     private static final int HOURS_IN_MINUTES_MULTIPLIER = 60000;
     private static final int MINUTES_IN_SECONDS_MULTIPLIER = 1000;
 
-    private static final int POURCENTAGE_MULTIPLIER = 100;
+    private static final int PERCENTAGE_MULTIPLIER = 100;
 
     private static final int NULL_TIMER = 0;
     private static final int TWO_CHAR_NUMBER_LIMIT = 10;
@@ -54,7 +54,7 @@ public class Utilities
         long currentSeconds = (int) (currentProgress / MINUTES_IN_SECONDS_MULTIPLIER);
         long totalSeconds = (int) (totalDuration / MINUTES_IN_SECONDS_MULTIPLIER);
 
-        percentage = (((double)currentSeconds)/totalSeconds) * POURCENTAGE_MULTIPLIER;
+        percentage = (((double)currentSeconds)/totalSeconds) * PERCENTAGE_MULTIPLIER;
 
         return (int) percentage;
     }
@@ -64,7 +64,7 @@ public class Utilities
         int currentProgress = NULL_TIMER;
         int songLengthSecondFormat = (songLength / 1000);
 
-        currentProgress = (int) ((((double) progress) / POURCENTAGE_MULTIPLIER)  * songLengthSecondFormat);
+        currentProgress = (int) ((((double) progress) / PERCENTAGE_MULTIPLIER)  * songLengthSecondFormat);
         currentProgress = currentProgress * MINUTES_IN_SECONDS_MULTIPLIER;
 
         return currentProgress;
