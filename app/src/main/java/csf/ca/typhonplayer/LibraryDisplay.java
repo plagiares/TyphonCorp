@@ -1,71 +1,62 @@
 package csf.ca.typhonplayer;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import csf.ca.utilities.Utilities;
 
 /**
  * Created by Alexis on 2016-01-25.
  */
-public class LibraryDisplay extends ListActivity {
+public class LibraryDisplay extends Activity {
     // Songs list
-    private ArrayList<Song> songsList = new ArrayList<Song>();
-    private ArrayList<String> titles = new ArrayList<String>();
+
+    private static final String[] STAR = {"*"};
+    private static final String AUDIO_FILE_CRITERIA_SELECTION = " != 0";
+    private ArrayList<Song> songList = new ArrayList<Song>();
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
+        ListView listView ;
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.song_list_item_view);
+        setContentView(R.layout.library_view);
 
+        initSongList();
+        initView();
 
-        //SongsManager plm = new SongsManager();
-        // get all songs from sdcard
-            // this.songsList = plm.getSongList();
-        /*
-        // looping through playlist
-        for (int i = 0; i < songsList.size(); i++) {
-            // creating new HashMap
-            //HashMap<String, String> song = songsList.get(i).name songsList.get(i).path;
+        listView = (ListView) findViewById(R.id.list_songs);
 
-            // adding HashList to ArrayList
-            //songsListData.add(song);
-        }
-        */
+        AdapterSong adbSong;
+        adbSong = new AdapterSong (LibraryDisplay.this, 0, songList);
+        listView.setAdapter(adbSong);
 
-        Song song = new Song("name", "abc");
-        song.name = "name";
-        song.album = "album";
-        song.artist = "artist";
-
-        Song song2 = new Song("name2", "abc2");
-        song.name = "name2";
-        song.album = "album2";
-        song.artist = "artist2";
-
-        songsList.add(song);
-        songsList.add(song2);
-
-        // Adding menuItems to ListView
-        ArrayAdapter<Song> adapter = new ArrayAdapter<Song>(this,
-                R.layout.list_item, songsList);
-        setListAdapter(adapter);
-        /*
-        // selecting single ListView item
-        ListView lv = getListView();
         // listening to single listitem click
-        lv.setOnItemClickListener(new OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -75,7 +66,7 @@ public class LibraryDisplay extends ListActivity {
 
                 // Starting new intent
                 Intent in = new Intent(getApplicationContext(),
-                        AndroidBuildingMusicPlayerActivity.class);
+                        AndroidMusicPlayerActivity.class);
                 // Sending songIndex to PlayerActivity
                 in.putExtra("songIndex", songIndex);
                 setResult(100, in);
@@ -83,52 +74,59 @@ public class LibraryDisplay extends ListActivity {
                 finish();
             }
         });
-        */
+
     }
 
-    void getSongs ()
+
+
+    public void initView()
     {
-        ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-        String[] STAR = { "*" };
 
-        Cursor cursor;
-        Context context;
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-
-        cursor =  getContentResolver().query(uri, STAR, selection, null, null);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    String songName = cursor
-                            .getString(cursor
-                                    .getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+    }
 
 
-                    String path = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Audio.Media.DATA));
+    public void initSongList()
+    {
+        Cursor c;
+        Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
 
+        c = getContentResolver().query(externalContentPath, STAR, selectMusicCriteria, null, null);
 
-                    String albumName = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    int albumId = cursor
-                            .getInt(cursor
-                                    .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+        if(c != null)
+        {
+            if(c.moveToFirst())
+            {
+                do
+                {
+                    String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-                    HashMap<String, String> song = new HashMap<String, String>();
-                    song.put("songTitle",albumName+" "+songName+"___"+albumId);
-                    song.put("songPath",path );
-                    songsList.add(song);
+                    if (type.equals("audio/mpeg"))
+                    {
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                        String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        String albumArtPath = null;
+                        try {
+                            albumArtPath = c.getString(c.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                        }
+                        catch (Exception e) {
 
-                } while (cursor.moveToNext());
+                        }
 
+                        Song newSong = new Song(songName, songPath);
 
+                        newSong.album = songAlbum;
+                        newSong.artist = songArtist;
+                        newSong.albumArtPath = albumArtPath;
+                        songList.add(newSong);
+                    }
+
+                }
+                while(c.moveToNext());
             }
 
         }
     }
-
-
-
 }
