@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -66,6 +67,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
      private SeekBar volumeSeekBar;
 
      private TextView lblSongTitle;
+     private TextView lblSongArtist;
      private TextView lblSongProgression;
      private TextView lblSongTotalDuration;
 
@@ -113,6 +115,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
+         lblSongArtist = (TextView) findViewById(R.id.songBand);
           lblSongProgression = (TextView) findViewById(R.id.songCurrentDurationLabel);
           lblSongTotalDuration = (TextView) findViewById(R.id.songTotalDurationLabel);
 
@@ -210,13 +213,20 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
               @Override
               public void onClick(View arg0)
               {
-                  if(currentSongIndex < (songList.size() - INDEX_DIFFERENCE))
-                  {
-                      currentSongIndex = currentSongIndex + INDEX_DIFFERENCE;
+                  if (onShuffleMode) {
+                      Random r = new Random();
+                      currentSongIndex = r.nextInt(songList.size() - 1);
                   }
                   else
                   {
-                      currentSongIndex = DEFAULT_SONG_INDEX;
+                      if(!onRepeatMode)
+                      {
+                          if (currentSongIndex < (songList.size() - INDEX_DIFFERENCE)) {
+                              currentSongIndex = currentSongIndex + INDEX_DIFFERENCE;
+                          } else {
+                              currentSongIndex = DEFAULT_SONG_INDEX;
+                          }
+                      }
                   }
 
                   playSong(currentSongIndex);
@@ -371,26 +381,18 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             mediaPlayer.start();
 
             String songTitle = songList.get(songIndex).name;
-
+            songTitle = songTitle.substring(0,songTitle.lastIndexOf('.'));
             lblSongTitle.setText(songTitle);
-
-            //Drawable img = Drawable.createFromPath(songList.get(songIndex).albumArtPath);
+            lblSongArtist.setText(songList.get(songIndex).artist);
 
             btnPlay.setImageResource(R.drawable.btn_pause);
 
-            /*
-            Picasso.with(this)
-                    .load(songList.get(songIndex).albumArtPath)
-                    .error(R.drawable.android3)      // optional
-                    //.resize(250, 200)                        // optional
-                    .into(albumArtThumbnail);
-*/
+            Ion.with(albumArtThumbnail).load("http://i748.photobucket.com/albums/xx127/gabespf/ezgif-6403ee33577.gif");
 
             songSeekBar.setProgress(DEFAULT_PERCENTAGE_SONG_COMPLETION);
             songSeekBar.setMax(FINAL_PERCENTAGE_SONG_COMPLETION);
 
             updateProgressBar();
-
         }
         catch (IOException e)
         {
