@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -17,8 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -411,7 +408,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             long totalDuration = mediaPlayer.getDuration();
             long currentDuration = mediaPlayer.getCurrentPosition();
 
-            lblSongTotalDuration.setText(utilities.timerFormat(totalDuration));
+            lblSongTotalDuration.setText(utilities.timerFormat(totalDuration - currentDuration));
             lblSongProgression.setText(utilities.timerFormat(currentDuration));
 
             int progressPercentage = utilities.getCurrentProgressPercentage(currentDuration, totalDuration);
