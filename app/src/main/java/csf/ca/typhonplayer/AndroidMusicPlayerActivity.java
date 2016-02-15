@@ -374,16 +374,17 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
             lblSongTitle.setText(songTitle);
 
-            Drawable img = Drawable.createFromPath(songList.get(songIndex).albumArtPath);
+            //Drawable img = Drawable.createFromPath(songList.get(songIndex).albumArtPath);
 
             btnPlay.setImageResource(R.drawable.btn_pause);
 
+            /*
             Picasso.with(this)
                     .load(songList.get(songIndex).albumArtPath)
                     .error(R.drawable.android3)      // optional
                     //.resize(250, 200)                        // optional
                     .into(albumArtThumbnail);
-
+*/
 
             songSeekBar.setProgress(DEFAULT_PERCENTAGE_SONG_COMPLETION);
             songSeekBar.setMax(FINAL_PERCENTAGE_SONG_COMPLETION);
