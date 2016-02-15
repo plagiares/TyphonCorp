@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -13,8 +14,11 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +61,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
      private ImageButton btnRepeat;
      private ImageButton btnShuffle;
 
+     private ImageView albumArtThumbnail;
      private SeekBar songSeekBar;
      private SeekBar volumeSeekBar;
 
@@ -69,7 +74,6 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
      private Handler handler = new Handler();
 
-     private SongsManager songsManager;
      private Utilities utilities;
 
      private int seekForwardTime = DEFAULT_FORWARD_TIME;
@@ -78,7 +82,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
      private boolean onShuffleMode = false;
      private boolean onRepeatMode = false;
-
+     
     private ArrayList<Song> songList = new ArrayList<Song>();
 
     @Override
@@ -87,6 +91,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         setContentView(R.layout.player);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+        initSongList();
         initView();
         initControlListener();
     }
@@ -101,8 +106,10 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           btnPlayList = (ImageButton) findViewById(R.id.btnPlaylist);
           btnRepeat = (ImageButton) findViewById(R.id.btnRepeat);
           btnShuffle = (ImageButton) findViewById(R.id.btnShuffle);
-
-          songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
+          
+        albumArtThumbnail = (ImageView) findViewById(R.id.albumArt);
+           
+            songSeekBar = (SeekBar) findViewById(R.id.songProgressBar);
           volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
@@ -112,14 +119,15 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           mediaPlayer = new MediaPlayer();
           audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-          songsManager = new SongsManager();
-
           utilities = new Utilities();
 
           songSeekBar.setOnSeekBarChangeListener(this);
 
           mediaPlayer.setOnCompletionListener(this);
+    }
 
+    public void initSongList()
+    {
         Cursor c;
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selectMusicCriteria = MediaStore.Audio.Media.IS_MUSIC + AUDIO_FILE_CRITERIA_SELECTION;
@@ -132,29 +140,62 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             {
                 do
                 {
-                    String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-                    Song newSong = new Song(songName, songPath);
+                    if (type.equals("audio/mpeg"))
+                    {
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                        String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        String albumArtPath= "";
+                        try {
+                            albumArtPath = c.getString(c.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                        }
+                        catch (Exception e) {
 
-                    newSong.album = songAlbum;
-                    newSong.artist = songArtiste;
+                        }
 
-                    songList.add(newSong);
+                        Song newSong = new Song(songName, songPath);
+
+                        newSong.album = songAlbum;
+                        newSong.artist = songArtist;
+                        newSong.albumArtPath = albumArtPath;
+                        songList.add(newSong);
+                    }
+
                 }
                 while(c.moveToNext());
-
-
             }
         }
-
-        //songList = songsManager.getInternalDriveAudio();
     }
-
+    
     public void initControlListener()
     {
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // check for already playing
+                if(mediaPlayer.isPlaying()){
+                    if(mediaPlayer!=null){
+                        mediaPlayer.pause();
+                        // Changing button image to play button
+                        btnPlay.setImageResource(R.drawable.btn_play);
+                    }
+                }else{
+                    // Resume song
+                    if(mediaPlayer!=null){
+                        mediaPlayer.start();
+                        // Changing button image to pause button
+                        btnPlay.setImageResource(R.drawable.btn_pause);
+                    }
+                }
+
+            }
+        });
+
+
           btnPlayList.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View arg0) {
@@ -307,22 +348,43 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         });
     }
 
-    private void playSong(int currentSongIndex)
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 100){
+            currentSongIndex = data.getExtras().getInt("songIndex");
+            // play selected song
+            playSong(currentSongIndex);
+        }
+    }
+
+    public void playSong(int songIndex)
     {
         try
         {
             mediaPlayer.reset();
 
-            mediaPlayer.setDataSource(songList.get(currentSongIndex).path);
+            mediaPlayer.setDataSource(songList.get(songIndex).path);
 
             mediaPlayer.prepare();
             mediaPlayer.start();
 
-            String songTitle = songList.get(currentSongIndex).name;
+            String songTitle = songList.get(songIndex).name;
 
             lblSongTitle.setText(songTitle);
 
+            //Drawable img = Drawable.createFromPath(songList.get(songIndex).albumArtPath);
+
             btnPlay.setImageResource(R.drawable.btn_pause);
+
+            /*
+            Picasso.with(this)
+                    .load(songList.get(songIndex).albumArtPath)
+                    .error(R.drawable.android3)      // optional
+                    //.resize(250, 200)                        // optional
+                    .into(albumArtThumbnail);
+*/
 
             songSeekBar.setProgress(DEFAULT_PERCENTAGE_SONG_COMPLETION);
             songSeekBar.setMax(FINAL_PERCENTAGE_SONG_COMPLETION);

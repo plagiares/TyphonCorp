@@ -21,34 +21,17 @@ public class SongsManager extends Activity {
     private final String AUDIO_PATH = new String("/sdcard/");
     private ArrayList<Song> songList = new ArrayList<Song>();
 
-    public SongsManager(){
-
+    public SongsManager()
+    {
+        initSongList();
     }
 
-    public ArrayList<Song>getSongList()
+    public ArrayList<Song> getSongList()
     {
-        File songFolder = new File(AUDIO_PATH);
-        if (songFolder.listFiles(new FileExtensionFilter()).length > 0) {
-            for (File file : songFolder.listFiles(new FileExtensionFilter())) {
-
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                mmr.setDataSource(String.valueOf(file));
-
-                String albumName =
-                        mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-
-
-                String songTitle = file.getName().substring(0, (file.getName().length() - 4));
-                String songPath = file.getPath();
-                Song songtoAdd = new Song(songTitle, songPath);
-
-                songList.add(songtoAdd);
-            }
-        }
         return songList;
     }
 
-    public ArrayList<Song> getInternalDriveAudio()
+    public void initSongList()
     {
         Cursor c;
         Uri externalContentPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -62,31 +45,35 @@ public class SongsManager extends Activity {
             {
                 do
                 {
-                    String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    String songArtiste = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    String type = c.getString(c.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
 
-                    Song newSong = new Song(songName, songPath);
+                    if (type.equals("audio/mpeg"))
+                    {
+                        String songName = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                        String songArtist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        String songAlbum = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                        String songPath = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        String albumArtPath = null;
+                        try {
+                            albumArtPath = c.getString(c.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                        }
+                        catch (Exception e) {
 
-                    newSong.album = songAlbum;
-                    newSong.artist = songArtiste;
+                        }
 
-                    songList.add(newSong);
+                        Song newSong = new Song(songName, songPath);
+
+                        newSong.album = songAlbum;
+                        newSong.artist = songArtist;
+                        newSong.albumArtPath = albumArtPath;
+                        songList.add(newSong);
+                    }
+
                 }
                 while(c.moveToNext());
-
-
             }
-        }
 
-        return songList;
-
-    }
-
-    class FileExtensionFilter implements FilenameFilter {
-        public boolean accept(File dir, String name) {
-            return (name.endsWith(".mp3") || name.endsWith(".MP3"));
         }
     }
+
 }

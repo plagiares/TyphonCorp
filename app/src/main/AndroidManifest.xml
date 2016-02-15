@@ -23,7 +23,12 @@
 
         <activity android:name=".SongDisplay"
             android:label="Song Item Selected"></activity>
+        <activity
+            android:name=".LibraryDisplay"
+            android:label="Library"/>
     </application>
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 </manifest>

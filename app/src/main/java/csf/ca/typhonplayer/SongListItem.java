@@ -12,15 +12,17 @@ public class SongListItem extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.song_list_item_view);
 
-        TextView txtSong = (TextView) findViewById(R.id.song_label);
+        super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.library_view);
+
+        /*TextView txtSong = (TextView) findViewById(R.id.song_label);
 
         Intent i = getIntent();
 
         String song = i.getStringExtra("song");
 
-        txtSong.setText(song);
+        txtSong.setText(song);*/
+
     }
 }

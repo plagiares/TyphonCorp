@@ -19,7 +19,7 @@ public class SongDisplay extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String[] song_titles = getResources().getStringArray(R.array.song_list);
+        /*String[] song_titles = getResources().getStringArray(R.array.song_list);
 
         this.setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, R.id.lblsong, song_titles));
 
@@ -38,6 +38,6 @@ public class SongDisplay extends ListActivity {
 
             }
         });
-
+*/
     }
 }
