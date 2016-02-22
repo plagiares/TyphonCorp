@@ -180,19 +180,22 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
             @Override
             public void onClick(View arg0) {
-                // check for already playing
+
                 if(mediaPlayer.isPlaying()){
-                    if(mediaPlayer!=null){
-                        mediaPlayer.pause();
-                        // Changing button image to play button
+                    if(mediaPlayer!=null)
+                    {
                         btnPlay.setImageResource(R.drawable.btn_play);
+
+                        mediaPlayer.pause();
                     }
-                }else{
-                    // Resume song
-                    if(mediaPlayer!=null){
-                        mediaPlayer.start();
-                        // Changing button image to pause button
+                }
+                else
+                {
+                    if(mediaPlayer!=null)
+                    {
                         btnPlay.setImageResource(R.drawable.btn_pause);
+
+                        mediaPlayer.start();
                     }
                 }
 
@@ -270,37 +273,27 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
              }
          });
 
-         btnBackward.setOnClickListener(new View.OnClickListener()
-         {
-            @Override
-            public void onClick(View arg0)
-            {
-                int currentProgression = mediaPlayer.getCurrentPosition();
+         btnBackward.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View arg0) {
+                 int currentProgression = mediaPlayer.getCurrentPosition();
 
-                if(currentProgression - seekBackwardTime >= INITIAL_SONG_TIME)
-                {
-                    mediaPlayer.seekTo(currentProgression - seekBackwardTime);
-                }
-                else
-                {
-                    mediaPlayer.seekTo(INITIAL_SONG_TIME);
-                }
-            }
+                 if (currentProgression - seekBackwardTime >= INITIAL_SONG_TIME) {
+                     mediaPlayer.seekTo(currentProgression - seekBackwardTime);
+                 } else {
+                     mediaPlayer.seekTo(INITIAL_SONG_TIME);
+                 }
+             }
          });
 
-        btnRepeat.setOnClickListener(new View.OnClickListener()
-        {
+        btnRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0)
-            {
-                if(onRepeatMode)
-                {
+            public void onClick(View arg0) {
+                if (onRepeatMode) {
                     onRepeatMode = false;
 
                     btnRepeat.setImageResource(R.drawable.btn_repeat);
-                }
-                else
-                {
+                } else {
                     onRepeatMode = true;
                     onShuffleMode = false;
 
@@ -311,19 +304,14 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
         });
 
-        btnShuffle.setOnClickListener(new View.OnClickListener()
-        {
+        btnShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(onShuffleMode)
-                {
+            public void onClick(View v) {
+                if (onShuffleMode) {
                     onShuffleMode = false;
 
                     btnShuffle.setImageResource(R.drawable.btn_shuffle);
-                }
-                else
-                {
+                } else {
                     onShuffleMode = true;
                     onRepeatMode = false;
 
@@ -337,35 +325,33 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         volumeSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         volumeSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
-        volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
+        volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-            {
-                   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
+            public void onStartTrackingTouch(SeekBar seekBar) {
                 //NOT_REQUIRED
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
+            public void onStopTrackingTouch(SeekBar seekBar) {
                 //NOT_REQUIRED
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode,int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 100){
+
+        if(resultCode == RETURN_CODE_PARAM)
+        {
             currentSongIndex = data.getExtras().getInt("songIndex");
-            // play selected song
+
             playSong(currentSongIndex);
         }
     }
@@ -373,17 +359,12 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
     //Sub that handle the execution of the MP3 file.
     public void playSong(int songIndex)
     {
-        try
-        {
-            mediaPlayer.reset();
-
-            mediaPlayer.setDataSource(songList.get(songIndex).path);
-
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            prepareMediaPlayer(songIndex);
 
             String songTitle = songList.get(songIndex).name;
+
             songTitle = songTitle.substring(0,songTitle.lastIndexOf('.'));
+
             lblSongTitle.setText(songTitle);
             lblSongArtist.setText(songList.get(songIndex).artist);
 
@@ -395,20 +376,26 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             songSeekBar.setMax(FINAL_PERCENTAGE_SONG_COMPLETION);
 
             updateProgressBar();
-        }
-        catch (IOException e)
-        {
-           e.printStackTrace();
-        }
-
 
     }
 
-    //Sub that update the song progressBar
-    private void updateProgressBar()
+    private void prepareMediaPlayer(int titleIndex)
     {
-        handler.postDelayed(updateTimeTask, THREAD_POST_DELAYED_TIME);
+        try
+        {
+        mediaPlayer.reset();
+
+        mediaPlayer.setDataSource(songList.get(titleIndex).path);
+
+            mediaPlayer.prepare();
+
+        mediaPlayer.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private Runnable updateTimeTask = new Runnable() {
         @Override
@@ -452,6 +439,12 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
            mediaPlayer.seekTo(currentSongProgression);
 
            updateProgressBar();
+    }
+
+    //Sub that update the song progressBar
+    private void updateProgressBar()
+    {
+        handler.postDelayed(updateTimeTask, THREAD_POST_DELAYED_TIME);
     }
 
     @Override
