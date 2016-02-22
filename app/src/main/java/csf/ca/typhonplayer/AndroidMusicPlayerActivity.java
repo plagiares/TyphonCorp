@@ -18,7 +18,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,6 +82,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
      
     private ArrayList<Song> songList = new ArrayList<Song>();
 
+    //Main activity Constructor
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +94,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         initControlListener();
     }
 
+    //Private sub to get the control form the layout
     public void initView()
     {
           btnPlay = (ImageButton) findViewById(R.id.btnPlay);
@@ -111,7 +112,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
 
           lblSongTitle = (TextView) findViewById(R.id.songTitle);
-         lblSongArtist = (TextView) findViewById(R.id.songBand);
+          lblSongArtist = (TextView) findViewById(R.id.songBand);
           lblSongProgression = (TextView) findViewById(R.id.songCurrentDurationLabel);
           lblSongTotalDuration = (TextView) findViewById(R.id.songTotalDurationLabel);
 
@@ -125,6 +126,8 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
           mediaPlayer.setOnCompletionListener(this);
     }
 
+    //Sub that browse through Android internal hard drive in order to get MP3 file.
+    //Return the song list with each respective directory path link to the corresponding song.
     public void initSongList()
     {
         Cursor cursor;
@@ -169,7 +172,8 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
             }
         }
     }
-    
+
+    //Sub that initialize each control listener
     public void initControlListener()
     {
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -366,6 +370,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
         }
     }
 
+    //Sub that handle the execution of the MP3 file.
     public void playSong(int songIndex)
     {
         try
@@ -399,6 +404,7 @@ implements OnCompletionListener , SeekBar.OnSeekBarChangeListener
 
     }
 
+    //Sub that update the song progressBar
     private void updateProgressBar()
     {
         handler.postDelayed(updateTimeTask, THREAD_POST_DELAYED_TIME);

@@ -1,27 +1,16 @@
 package csf.ca.typhonplayer;
 
 import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import csf.ca.utilities.Utilities;
 
 /**
  * Created by Alexis on 2016-01-25.
@@ -38,6 +27,7 @@ public class LibraryDisplay extends Activity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
 
+    //Activity initializer
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -85,6 +75,7 @@ public class LibraryDisplay extends Activity {
     }
 
 
+    //Initialize song list
     public void initSongList()
     {
         Cursor c;
