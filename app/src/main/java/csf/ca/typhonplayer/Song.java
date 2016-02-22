@@ -1,11 +1,9 @@
 package csf.ca.typhonplayer;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by ~ætyíhœtrē~ on 2016-01-28.
  */
+//Container Class that keep song info
 public class Song {
     public String name;
     public String artist;

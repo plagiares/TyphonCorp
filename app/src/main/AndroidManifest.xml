@@ -19,13 +19,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SongListItem"
-            android:screenOrientation="portrait"
-            android:label="Song Item Selected"></activity>
-
-        <activity android:name=".SongDisplay"
-            android:screenOrientation="portrait"
-            android:label="Song Item Selected"></activity>
         <activity
             android:name=".LibraryDisplay"
             android:screenOrientation="portrait"

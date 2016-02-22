@@ -18,12 +18,14 @@ public class AdapterSong extends ArrayAdapter<Song> {
     private ArrayList<Song> lSongs;
     private static LayoutInflater inflater = null;
 
+    //AdapterSong Constructor
     public AdapterSong (Activity activity, int textViewResourceId,ArrayList<Song> _lSongs) {
         super(activity, textViewResourceId);
         try {
             this.activity = activity;
             this.lSongs = _lSongs;
 
+            //Generate list layout
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         } catch (Exception e) {
@@ -48,6 +50,7 @@ public class AdapterSong extends ArrayAdapter<Song> {
         public TextView display_artist;
     }
 
+    //Return list layout
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         final ViewHolder holder;
